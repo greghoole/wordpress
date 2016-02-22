@@ -16,43 +16,94 @@ $e->initialize();
 
 ?>
 
-<div class="wrap">
+
+<div class="embed-wrap">
 
     <h1>Embed Analytics</h1>
-    <div>
+
+    <div class="toolbar">
+        <div id="active-users-container"></div>
         <form id="embed-analytics" action="" method="get">
             <input type="hidden" name="page" value="embed_analytics" />
             <input type="text" name="date_range" value='<?php echo json_encode($date_range); ?>'/>
         </form>
     </div>
-    <div class="section-container">
-        <label>New Users</label>
-        <section id="chart-1-container"></section>
+
+    <h2>Website Traffic</h2>
+
+    <div class="section-parent">
+
+      <div class="section-container">
+          <label>Sessions</label>
+          <section id="traffic-1-container"></section>
+      </div>
+
+      <div class="section-container">
+          <label>Pageviews</label>
+          <section id="traffic-2-container"></section>
+      </div>
+
+      <div class="section-container">
+          <label>Page Views per Session</label>
+          <section id="traffic-3-container"></section>
+      </div>
+
+      <div class="section-container">
+          <label>Users</label>
+          <section id="traffic-4-container"></section>
+      </div>
+
+      <div class="section-container">
+          <label>New Users</label>
+          <section id="traffic-5-container"></section>
+      </div>
+
+      <div class="section-container">
+          <label>Sessions vs Users</label>
+          <section id="traffic-6-container"></section>
+      </div>
+
     </div>
 
-    <div class="section-container">
-        <label>Sessions vs Users</label>
-        <section id="chart-2-container"></section>
+    <h2>Content Statistics</h2>
+
+    <div class="section-parent">
+
+      <div class="section-container">
+          <label>Top Jobs | <a href="javascript:;" onclick="Embed.viewAll('6', 'Top Jobs');">View All</a></label>
+          <section id="content-1-container"></section>
+      </div>
+
+      <div class="section-container">
+          <label>Top Events | <a href="javascript:;" onclick="Embed.viewAll('7', 'Top Events');">View All</a></label>
+          <section id="content-2-container"></section>
+      </div>
+
+      <div class="section-container">
+          <label>Top Blogs | <a href="javascript:;" onclick="Embed.viewAll('8', 'Top Blogs');">View All</a></label>
+          <section id="content-3-container"></section>
+      </div>
+
+      <div class="section-container">
+          <label>Top Resources | <a href="javascript:;" onclick="Embed.viewAll('9', 'Top Resources');">View All</a></label>
+          <section id="content-4-container"></section>
+      </div>
+
+      <div class="section-container">
+          <label>Top Pages | <a href="javascript:;" onclick="Embed.viewAll('10', 'Top Pages');">View All</a></label>
+          <section id="content-5-container"></section>
+      </div>
+
+      <div class="section-container">
+          <label>Top Sources | <a href="javascript:;" onclick="Embed.viewAll('11', 'Top Sources');">View All</a></label>
+          <section id="content-6-container"></section>
+      </div>
+
     </div>
 
-    <div class="section-container">
-        <label>Page Views per Session</label>
-        <section id="chart-5-container"></section>
-    </div>
-
-    <div class="section-container">
-        <label>Top 7 Pages</label>
-        <section id="chart-3-container"></section>
-    </div>
-
-    <div class="section-container">
-        <label>Top Countries by Sessions</label>
-        <section id="chart-4-container"></section>
-    </div>
-
-    <div class="section-container">
-        <label>Sessions by Source</label>
-        <section id="chart-6-container"></section>
+    <div id="view-all" class="section-parent">
+        <h2></h2>
+        <div id="view-all-chart"></div>
     </div>
 
 </div>
@@ -66,133 +117,15 @@ $e->initialize();
 }(window,document,'script'));
 </script>
 
+<!-- Include the ActiveUsers component script. -->
+<script src="<?php echo content_url(); ?>/lib/js/jquery-scrollto.js"></script>
+<script src="<?php echo plugins_url('/js/active-users.js', dirname(__FILE__)); ?>"></script>
+
 <script>
-gapi.analytics.ready(function() {
-
-  var IDS = 'ga:<?php echo $e->get('profileId'); ?>';
-  var ACCESS_TOKEN = '<?php echo $e->get('accessToken'); ?>';
-  var START_DATE = '<?php echo $date_range['start']; ?>';
-  var END_DATE = '<?php echo $date_range['end']; ?>';
-
-  gapi.analytics.auth.authorize({
-    serverAuth: {
-      access_token: ACCESS_TOKEN
-    }
-  });
-
-  var dataChart1 = new gapi.analytics.googleCharts.DataChart({
-    reportType: 'ga',
-    query: {
-      'ids': IDS,
-      'dimensions': 'ga:date',
-      'metrics': 'ga:newUsers',
-      'start-date': START_DATE,
-      'end-date': END_DATE,
-    },
-    chart: {
-      type: 'LINE',
-      container: 'chart-1-container',
-      'options': {
-        'width': '100%'
-      }
-    }
-  }).execute();
-
-  var dataChart2 = new gapi.analytics.googleCharts.DataChart({
-    query: {
-      'ids': IDS,
-      'start-date': START_DATE,
-      'end-date': END_DATE,
-      'metrics': 'ga:sessions,ga:users',
-      'dimensions': 'ga:date'
-    },
-    chart: {
-      'type': 'LINE',
-      'container': 'chart-2-container',
-      'options': {
-        'width': '100%'
-      }
-    }
-  }).execute();
-
-  var dataChart3 = new gapi.analytics.googleCharts.DataChart({
-    query: {
-      'ids': IDS, 
-      'start-date': START_DATE,
-      'end-date': END_DATE,
-      'metrics': 'ga:pageviews',
-      'dimensions': 'ga:pagePathLevel1',
-      'sort': '-ga:pageviews',
-      'filters': 'ga:pagePathLevel1!=/',
-      'max-results': 7
-    },
-    chart: {
-      'type': 'PIE',
-      'container': 'chart-3-container',
-      'options': {
-        'width': '100%',
-        'pieHole': 4/9,
-      }
-    }
-  }).execute();
-
-  var dataChart4 = new gapi.analytics.googleCharts.DataChart({
-    query: {
-      'ids': IDS, 
-      'metrics': 'ga:sessions',
-      'dimensions': 'ga:country',
-      'start-date': START_DATE,
-      'end-date': END_DATE,
-      'max-results': 6,
-      sort: '-ga:sessions'
-    },
-    chart: {
-      'type': 'PIE',
-      'container': 'chart-4-container',
-      'options': {
-        'width': '100%',
-        'pieHole': 4/9
-      }
-    }
-  }).execute();
-
-  var dataChart5 = new gapi.analytics.googleCharts.DataChart({
-    reportType: 'ga',
-    query: {
-      'ids': IDS,
-      'dimensions': 'ga:date',
-      'metrics': 'ga:pageviewsPerSession',
-      'start-date': START_DATE,
-      'end-date': END_DATE,
-    },
-    chart: {
-      type: 'LINE',
-      container: 'chart-5-container',
-      'options': {
-        'width': '100%'
-      }
-    }
-  }).execute();
-
-  var dataChart6 = new gapi.analytics.googleCharts.DataChart({
-    query: {
-      'ids': IDS, 
-      'metrics': 'ga:sessions',
-      'dimensions': 'ga:source',
-      'start-date': START_DATE,
-      'end-date': END_DATE,
-      'max-results': 6,
-      sort: '-ga:sessions'
-    },
-    chart: {
-      'type': 'PIE',
-      'container': 'chart-6-container',
-      'options': {
-        'width': '100%',
-        'pieHole': 4/9
-      }
-    }
-  }).execute();
-
+jQuery(function($){
+  Embed.IDS = 'ga:<?php echo $e->get('profileId'); ?>';
+  Embed.ACCESS_TOKEN = '<?php echo $e->get('accessToken'); ?>';
+  Embed.START_DATE = '<?php echo $date_range['start']; ?>';
+  Embed.END_DATE = '<?php echo $date_range['end']; ?>';
 });
 </script>

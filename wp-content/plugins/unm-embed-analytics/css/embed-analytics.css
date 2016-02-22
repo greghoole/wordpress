@@ -1,7 +1,56 @@
+.embed-wrap {
+	position: relative;
+	padding: 1%;
+	width: 100%;
+	background: #fff;
+}
+
+.embed-wrap .toolbar {
+	height: 40px;
+}
+
+.section-parent {
+	position: relative;
+	width: 100%;
+	display: inline-block;
+}
+
+#active-users-container {
+	padding: 5px;
+	width: 95%;
+}
+
+#active-users-container .ActiveUsers {
+	background: hsl(30,10%,95%);
+    border: 1px solid #d4d2d0;
+    border-radius: 4px;
+    font-weight: 300;
+    padding: .5em 1.5em;
+    white-space: nowrap;
+    float: right;
+}
+
+#active-users-container .ActiveUsers.is-increasing .ActiveUsers-value {
+	color: #009900;
+}
+#active-users-container .ActiveUsers.is-decreasing .ActiveUsers-value {
+	color: #f00;
+}
+
 .section-container {
-	margin: 10px;
+	margin: 1%;
+	margin-left: 0;
 	padding: 10px;
 	width: 30%; 
 	background: #fff;
+	border: 1px solid #ccc;
 	float: left;
+}
+
+#view-all {
+	width: 95%;
+}
+
+#view-all-chart {
+	min-height: 50px;
 }
